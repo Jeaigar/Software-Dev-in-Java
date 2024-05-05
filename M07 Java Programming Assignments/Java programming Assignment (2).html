@@ -1,0 +1,41 @@
+<%@ page import="java.util.Random" %>
+<%
+    Random rand = new Random();
+    int num1 = rand.nextInt(50);
+    int num2 = rand.nextInt(50);
+    int correctAnswer = num1 + num2;
+    session.setAttribute("correctAnswer", correctAnswer);
+%>
+<html>
+<head>
+    <title>Addition Quiz</title>
+</head>
+<body>
+    <form method="post">
+        <% for(int i=0; i<10; i++) { %>
+            <% 
+                num1 = rand.nextInt(50);
+                num2 = rand.nextInt(50);
+                correctAnswer = num1 + num2;
+            %>
+            <p> <%= num1 %> + <%= num2 %> = <input type="text" name="answer<%= i %>" /></p>
+            <input type="hidden" name="correctAnswer<%= i %>" value="<%= correctAnswer %>" />
+        <% } %>
+        <input type="submit" value="Submit" />
+    </form>
+    <%
+        if(request.getMethod().equals("POST")) {
+            int score = 0;
+            for(int i=0; i<10; i++) {
+                String answer = request.getParameter("answer" + i);
+                correctAnswer = Integer.parseInt(request.getParameter("correctAnswer" + i));
+                if(answer != null && !answer.isEmpty() && Integer.parseInt(answer) == correctAnswer) {
+                    score++;
+                }
+            }
+    %>
+        <h1>Results</h1>
+        <p>Your score: <%= score %> out of 10</p>
+    <% } %>
+</body>
+</html>
